@@ -1,0 +1,11 @@
+name: Compile Plugin
+on:
+  [workflow_call]
+
+jobs:
+  compile-engine-plugin:
+    name: 💻 Compile Plugin
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - run: /home/ue4/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildPlugin -Rocket -Plugin=${{ github.workspace }}/${{ github.event.repository.name }}.uplugin -Package=${{ github.workspace }}/PackageResults
