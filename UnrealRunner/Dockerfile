@@ -1,4 +1,4 @@
-FROM ghcr.io/epicgames/unreal-engine:dev-slim-5.0.3
+FROM ghcr.io/epicgames/unreal-engine:dev-slim-5.1.0
 
 LABEL org.opencontainers.image.source https://github.com/outoftheboxplugins/buildmachines
 
