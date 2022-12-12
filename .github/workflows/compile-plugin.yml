@@ -11,7 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         unreal: ['5.1']
-        app: ['sample']
 
     steps:
       - name: Free disk space
@@ -61,5 +60,18 @@ jobs:
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/DotNet ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Programs/UnrealPak/Saved "
+
+      - name: Setup UE CLI
+        run: docker exec unreal bash -c '
+          pip3 install --upgrade pip ;
+          pip3 install -Iv ue4cli==0.0.54 ;
+          ue4 setroot /home/ue4/UnrealEngine '
+
       - uses: actions/checkout@v3
-      - run: /home/ue4/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildPlugin -Rocket -Plugin=${{ github.workspace }}/${{ github.event.repository.name }}.uplugin -Package=${{ github.workspace }}/PackageResults
+      
+      - name: Build & package ${{ matrix.app }}
+        id: package-app
+        run: |
+          docker exec -w ${{ github.workspace }} unreal ue4 package
+
+      # - run: /home/ue4/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildPlugin -Rocket -Plugin=${{ github.workspace }}/${{ github.event.repository.name }}.uplugin -Package=${{ github.workspace }}/PackageResults
