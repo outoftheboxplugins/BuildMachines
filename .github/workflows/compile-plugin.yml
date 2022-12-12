@@ -68,10 +68,12 @@ jobs:
           ue4 setroot /home/ue4/UnrealEngine '
 
       - uses: actions/checkout@v3
-      
+        with:
+          path: checkout
+
       - name: Build & package ${{ matrix.app }}
         id: package-app
         run: |
-          docker exec -w ${{ github.workspace }} unreal ue4 package
+          docker exec -w /workspace/checkout/ unreal ue4 package
 
       # - run: /home/ue4/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildPlugin -Rocket -Plugin=${{ github.workspace }}/${{ github.event.repository.name }}.uplugin -Package=${{ github.workspace }}/PackageResults
