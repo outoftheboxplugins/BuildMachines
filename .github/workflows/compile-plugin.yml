@@ -7,8 +7,7 @@ on:
 jobs:
   test:
     name: Test UE ${{ matrix.unreal }}
-    # runs-on: ubuntu-latest
-    runs-on: huge-runner
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -20,18 +19,18 @@ jobs:
         if: ${{ steps.exists.outputs.value == 0 }}
         run: |
           # time df -h
-          ##sudo time swapoff -a
-          ##sudo time rm -f /swapfile
-          ##sudo time rm -rf /usr/local/lib/android
-          ##sudo time rm -rf /usr/share/dotnet
-          ##sudo time rm -rf /usr/share/swift
-          ##sudo time rm -rf /usr/local/.ghcup
-          ##sudo time rm -rf /usr/local/lib/node_modules
-          ##sudo time rm -rf /usr/lib/google-cloud-sdk
-          ##sudo time rm -rf /opt/pipx
-          ##sudo time rm -rf "$AGENT_TOOLSDIRECTORY"
-          ##sudo time apt-get clean
-          ##sudo time rm -rf /var/lib/apt/lists/*
+          sudo time swapoff -a
+          sudo time rm -f /swapfile
+          sudo time rm -rf /usr/local/lib/android
+          sudo time rm -rf /usr/share/dotnet
+          sudo time rm -rf /usr/share/swift
+          sudo time rm -rf /usr/local/.ghcup
+          sudo time rm -rf /usr/local/lib/node_modules
+          sudo time rm -rf /usr/lib/google-cloud-sdk
+          sudo time rm -rf /opt/pipx
+          sudo time rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo time apt-get clean
+          sudo time rm -rf /var/lib/apt/lists/*
           # time docker rmi $(docker image ls -aq)
           # time du --max-depth=3 --threshold=100M -h /usr /opt /var 2>/dev/null | sort -hr
           df -h
