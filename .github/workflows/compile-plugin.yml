@@ -57,6 +57,9 @@ jobs:
           docker exec --user root unreal bash -c "
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/DotNet "
+            
+          # Add the user so it has a home directory (needed for the pip cache later on)
+          docker exec --user root unreal useradd -u $uid -g $gid --create-home $user
 
       - name: Setup UE CLI
         run: docker exec unreal bash -c '
