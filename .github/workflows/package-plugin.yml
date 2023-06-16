@@ -5,6 +5,8 @@ on:
       plugin_name:
         default: "${{ github.event.repository.name }}"
         type: string
+        required: true
+        description: 'Test'
 
 jobs:
   publish-engine-plugin:
