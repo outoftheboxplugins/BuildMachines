@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       plugin_name:
-        default: "${{ github.event.repository.name }}"
+        default: 'testdefault'
         type: string
         required: true
         description: 'Test'
