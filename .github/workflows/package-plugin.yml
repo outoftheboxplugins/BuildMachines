@@ -17,7 +17,7 @@ jobs:
       
       - uses: jossef/action-set-json-field@v2
         with:
-          file: "${{ github.event.inputs.plugin_name }}.uplugin"
+          file: "${{ inputs.plugin_name }}.uplugin"
           field: VersionName
           value: "${{ github.ref_name }}"
 
@@ -30,7 +30,7 @@ jobs:
           credentials: ${{ secrets.GDRIVE_TOKEN }}
           filename: "archive.zip"
           folderId: ${{ secrets.GDRIVE_FOLDER }}
-          name: "${{ github.event.inputs.plugin_name }}-${{ github.ref_name }}.zip"
+          name: "${{ inputs.plugin_name }}-${{ github.ref_name }}.zip"
           overwrite: "true"
 
       - uses: ncipollo/release-action@v1
