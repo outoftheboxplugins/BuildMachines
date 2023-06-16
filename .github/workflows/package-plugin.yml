@@ -1,6 +1,10 @@
 name: Package Plugin
 on:
-  [workflow_call]
+  workflow_call:
+    inputs:
+      plugin_name:
+        default: ${{ github.event.repository.name }}
+        type: string
 
 jobs:
   publish-engine-plugin:
@@ -11,7 +15,7 @@ jobs:
       
       - uses: jossef/action-set-json-field@v2
         with:
-          file: "${{ github.event.repository.name }}.uplugin"
+          file: "${{ github.event.inputs.plugin_name }}.uplugin"
           field: VersionName
           value: "${{ github.ref_name }}"
 
@@ -24,7 +28,7 @@ jobs:
           credentials: ${{ secrets.GDRIVE_TOKEN }}
           filename: "archive.zip"
           folderId: ${{ secrets.GDRIVE_FOLDER }}
-          name: "${{ github.event.repository.name }}-${{ github.ref_name }}.zip"
+          name: "${{ github.event.inputs.plugin_name }}-${{ github.ref_name }}.zip"
           overwrite: "true"
 
       - uses: ncipollo/release-action@v1
