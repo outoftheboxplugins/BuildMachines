@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       plugin_name:
-        default: ${{ github.event.repository.name }}
+        default: "${{ github.event.repository.name }}"
         type: string
 
 jobs:
