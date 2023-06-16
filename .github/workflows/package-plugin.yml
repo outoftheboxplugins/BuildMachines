@@ -3,10 +3,8 @@ on:
   workflow_call:
     inputs:
       plugin_name:
-        default: 'testdefault'
+        default: "${{ github.event.repository.name }}"
         type: string
-        required: true
-        description: 'Test'
 
 jobs:
   publish-engine-plugin:
