@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        unreal: ['5.2']
+        unreal: ['5.3']
 
     steps:
       - name: Free disk space
