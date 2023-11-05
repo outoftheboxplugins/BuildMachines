@@ -21,7 +21,7 @@ jobs:
 
       - name: Archive files
         run: |
-          zip -r archive.zip . -x LICENSE
+          zip -r archive.zip . -x "LICENSE" -x ".github/*" -x ".git/*"
 
       - uses: adityak74/google-drive-upload-git-action@main
         with:
