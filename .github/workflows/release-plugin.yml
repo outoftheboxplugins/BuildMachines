@@ -26,4 +26,4 @@ jobs:
 
       - uses: softprops/action-gh-release@v1
         with:
-          - files: ${{ inputs.plugin_name }}-${{ github.ref_name }}.zip
+          - files: "${{ inputs.plugin_name }}-${{ github.ref_name }}.zip"
