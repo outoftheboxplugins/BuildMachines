@@ -1,18 +1,23 @@
 # Adjusted from the brilliant Ivan Tustanivsky who developed this for Sentry
 
 name: Compile Plugin
+
 on:
-  [workflow_call]
+  workflow_call:
+    inputs:
+      ue_version:
+        default: "5.3"
+        type: string
+    secrets:
+      DOCKER_TOKEN:
+        required: true
+      DOCKER_USERNAME:
+        required: true
 
 jobs:
   test:
-    name: Test UE ${{ matrix.unreal }}
+    name: Test UE ${{ inputs.ue_version }}
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        unreal: ['5.3']
 
     steps:
       - name: Free disk space
@@ -49,7 +54,7 @@ jobs:
             --workdir /workspace \
             --user $uid:$gid \
             --env PATH="/home/$user/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-            ghcr.io/epicgames/unreal-engine:dev-slim-${{ matrix.unreal }}
+            ghcr.io/epicgames/unreal-engine:dev-slim-${{ inputs.ue_version }}
           docker logout ghcr.io
 
           # Chown some paths to the GH user to make UE5 work properly. We can't just chown the whole UnrealEngine or

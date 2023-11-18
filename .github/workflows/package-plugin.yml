@@ -1,4 +1,5 @@
 name: Package Plugin
+
 on:
   workflow_call:
     inputs:

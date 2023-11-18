@@ -1,0 +1,28 @@
+name: Package Plugin
+
+on:
+  workflow_call:
+    inputs:
+      plugin_name:
+        default: "${{ github.event.repository.name }}"
+        type: string
+
+jobs:
+  publish-engine-plugin:
+    runs-on: ubuntu-latest
+    name: 📦 Package Plugin
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Free disk space
+        run: |
+          ls -al
+          pwd
+
+      - uses: jossef/action-set-json-field@v2
+        with:
+          file: "${{ inputs.plugin_name }}.uplugin"
+          field: VersionName
+          value: "${{ github.ref_name }}"
+
+      - uses: softprops/action-gh-release@v1
