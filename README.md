@@ -1,69 +1,66 @@
 # Unreal Marketplace Build Machines
 
-To goal of this repository is to provide extendable docker images & github workflow for working on Unreal Engine Marketplace plugins
+To goal of this repository is to provide extendable github workflow for common requirements of Unreal Engine plugins.
 
-## Description
+# Compile Plugin
 
-TODO: An in-depth paragraph about your project and overview of use.
+## Goal
 
-## Getting Started
+Runs the `ue4 package` CLI command against the repository using the official Linux Docker image provided by Epic Games (`unreal-engine:dev-slim`).
 
-### Dependencies
+## Setup
 
-TODO: 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+You will need a GitHub user with `READ` access to `ghcr.io/epicgames`.
 
-### Installing
+The compile step has **required** 2 secrets: `DOCKER_TOKEN` and `DOCKER_USERNAME`.
 
-TODO: 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+Those can be provided as arguments via:
 
-### Executing program
-
-TODO: 
-* How to run the program
-* Step-by-step bullets
 ```
-code blocks for commands
+    uses:  outoftheboxplugins/BuildMachines/.github/workflows/compile-plugin.yml@master
+    secrets:
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 ```
 
-## Help
+or defined at repository / organisation level and passed via:
 
-TODO: 
-Any advise for common problems or issues.
 ```
-command to run if program contains helper info
+    uses:  outoftheboxplugins/BuildMachines/.github/workflows/compile-plugin.yml@master
+    secrets: inherit
 ```
 
-## Authors
+Optionally you can pass in a specific UE version via the `ue_version` input parameter.
 
-TODO: 
-Contributors names and contact info
+```
+    uses:  outoftheboxplugins/BuildMachines/.github/workflows/compile-plugin.yml@master
+    with:
+        ue_version: "5.2"
+    secrets: inherit
+```
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+# Release Plugin
 
-## Version History
+## Goal
 
-TODO: 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
+Sets the `VersionName` of the `uplugin` file to match the tag and creates a GitHub release.
 
-## License
+## Setup
 
-TODO: 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+No required inputs, this can be added to your workflow via:
 
-## Acknowledgments
+```
+    uses:  outoftheboxplugins/BuildMachines/.github/workflows/release-plugin.yml@master
+```
 
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+By default the step uses the repository name to find the `.uplugin` file. If they are different, you can supply the name of the plugin via the `plugin_name` input parameter.
+
+```
+    uses:  outoftheboxplugins/BuildMachines/.github/workflows/release-plugin.yml@master
+    with:
+      plugin_name: Aptabase
+```
+
+# Package Plugin
+
+- currently used by myself to upload plugins to Google Drive so I can submit them to the UE marketplace. Docs to be done soon.

@@ -76,7 +76,7 @@ jobs:
         with:
           path: checkout
 
-      - name: Build & package ${{ matrix.app }}
+      - name: Build & package
         id: package-app
         run: |
           docker exec -w /workspace/checkout/ unreal ue4 package
