@@ -24,6 +24,10 @@ jobs:
         run: |
           zip -r "${{ inputs.plugin_name }}-${{ github.ref_name }}.zip" .
 
-      - uses: softprops/action-gh-release@v1
+      - uses: ncipollo/release-action@v1
         with:
-          - files: "${{ inputs.plugin_name }}-${{ github.ref_name }}.zip"
+          artifacts: ${{ inputs.plugin_name }}-${{ github.ref_name }}.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true
+          tag: ${{ github.ref }}
+          name: "${{ github.ref_name }}"
