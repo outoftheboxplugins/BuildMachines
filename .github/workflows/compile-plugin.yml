@@ -8,9 +8,9 @@ on:
       ue_version:
         default: "5.3"
         type: string
-      checkout_code:
-        default: true
-        type: boolean
+      plugin_code:
+        default: ""
+        type: string
     secrets:
       DOCKER_TOKEN:
         required: true
@@ -76,8 +76,14 @@ jobs:
           ue4 setroot /home/ue4/UnrealEngine '
 
       - uses: actions/checkout@v3
-        if: ${{ inputs.checkout_code }}
+        if: ${{ inputs.plugin_code == "" }}
         with:
+          path: plugin
+
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.plugin_code != "" }}
+        with:
+          name: ${{ inputs.plugin_code }}
           path: plugin
 
       - name: Build & package
