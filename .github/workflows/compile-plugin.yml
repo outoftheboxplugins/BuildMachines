@@ -8,6 +8,9 @@ on:
       ue_version:
         default: "5.3"
         type: string
+      checkout_code:
+        default: true
+        type: boolean
     secrets:
       DOCKER_TOKEN:
         required: true
@@ -73,10 +76,11 @@ jobs:
           ue4 setroot /home/ue4/UnrealEngine '
 
       - uses: actions/checkout@v3
+        if: ${{ inputs.checkout_code }}
         with:
-          path: checkout
+          path: plugin
 
       - name: Build & package
         id: package-app
         run: |
-          docker exec -w /workspace/checkout/ unreal ue4 package
+          docker exec -w /workspace/plugin/ unreal ue4 package
