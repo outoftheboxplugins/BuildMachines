@@ -6,7 +6,7 @@ on:
   workflow_call:
     inputs:
       ue_version:
-        default: "5.4"
+        default: "5.5"
         type: string
       plugin_code:
         default: ""
