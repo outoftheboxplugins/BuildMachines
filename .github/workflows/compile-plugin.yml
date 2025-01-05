@@ -64,6 +64,7 @@ jobs:
           # docker would implicitly have to copy it to the container and we would run out of space on the GH runner.
           docker exec --user root unreal bash -c "
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux ;
+            chown -R $uid /home/ue4/UnrealEngine/Engine/Plugins/VirtualProduction/CaptureData ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/DotNet "
             
           # Add the user so it has a home directory (needed for the pip cache later on)
