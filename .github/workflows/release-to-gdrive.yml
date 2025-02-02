@@ -11,6 +11,9 @@ jobs:
   publish-engine-plugin:
     runs-on: ubuntu-latest
     name: 📦 Package Plugin
+    strategy:
+      matrix:
+        version: ['5.3', '5.4', '5.5']
     steps:
       - uses: actions/checkout@v3
       
@@ -20,22 +23,20 @@ jobs:
           field: VersionName
           value: "${{ github.ref_name }}"
 
+      - uses: jossef/action-set-json-field@v2
+        with:
+          file: "${{ inputs.plugin_name }}.uplugin"
+          field: EngineVersion
+          value: "${{ matrix.version }}"
+
       - name: Archive files
         run: |
-          zip -r archive.zip . -x "LICENSE" -x ".github/*" -x ".git/*"
+          zip -r "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip" . -x "LICENSE" -x ".github/*" -x ".git/*"
 
       - uses: adityak74/google-drive-upload-git-action@main
         with:
           credentials: ${{ secrets.GDRIVE_TOKEN }}
-          filename: "archive.zip"
+          filename: "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip"
           folderId: ${{ secrets.GDRIVE_FOLDER }}
-          name: "${{ inputs.plugin_name }}-${{ github.ref_name }}.zip"
+          name: "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip"
           overwrite: "true"
-
-      - uses: ncipollo/release-action@v1
-        with:
-          artifacts: "archive.zip"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          generateReleaseNotes: true
-          tag: ${{ github.ref }}
-          name: "${{ github.ref_name }}"
