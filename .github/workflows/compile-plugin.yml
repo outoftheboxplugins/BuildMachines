@@ -81,7 +81,7 @@ jobs:
       - name: Setup C++ runtime
         run: docker exec --user root unreal bash -c '
           apt-get update ;
-          apt-get install -y build-essential libc++-dev libc++abi-dev'
+          apt-get install -y libstdc++6 build-essential libc++-dev libc++abi-dev'
 
       - name: Setup UE CLI
         run: docker exec unreal bash -c '
