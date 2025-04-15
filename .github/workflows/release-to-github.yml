@@ -16,6 +16,8 @@ jobs:
         version: ['5.3', '5.4', '5.5']
     steps:
       - uses: actions/checkout@v3
+        with:
+          lfs: true
 
       - uses: jossef/action-set-json-field@v2
         with:
