@@ -6,7 +6,7 @@ on:
       plugin_name:
         default: "${{ github.event.repository.name }}"
         type: string
-      exclude_patterns: # New input for exclusion patterns
+      exclude_patterns:
         default: "-x LICENSE -x .github/* -x .git/*"
         type: string
 
