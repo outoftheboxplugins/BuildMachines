@@ -7,7 +7,7 @@ on:
         default: "${{ github.event.repository.name }}"
         type: string
       exclude_patterns:
-        default: "-x LICENSE -x .github/* -x .git/*"
+        default: "-x \"LICENSE\" -x \".github/*\" -x \".git/*\""
         type: string
 
 jobs:
