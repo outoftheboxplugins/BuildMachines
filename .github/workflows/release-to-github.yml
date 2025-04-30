@@ -6,6 +6,9 @@ on:
       plugin_name:
         default: "${{ github.event.repository.name }}"
         type: string
+      exclude_patterns: # New input for exclusion patterns
+        default: "-x LICENSE -x .github/* -x .git/*"
+        type: string
 
 jobs:
   publish-engine-plugin:
@@ -33,7 +36,7 @@ jobs:
 
       - name: Archive files
         run: |
-          zip -r "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip" . -x "LICENSE" -x ".github/*" -x ".git/*"
+          zip -r "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip" . ${{ inputs.exclude_patterns }}
 
       - name: Release
         uses: softprops/action-gh-release@v2
