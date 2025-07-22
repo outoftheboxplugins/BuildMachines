@@ -11,7 +11,7 @@ on:
         type: string
 
 jobs:
-  publish-engine-plugin:
+  build-archives:
     runs-on: ubuntu-latest
     name: 📦 Package Plugin
     strategy:
@@ -38,7 +38,23 @@ jobs:
         run: |
           zip -r "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip" . ${{ inputs.exclude_patterns }}
 
-      - name: Release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ inputs.plugin_name }}-${{ matrix.version }}"
+          path: "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip"
+
+  release:
+    runs-on: ubuntu-latest
+    name: 🚀 Publish Release
+    needs: build-archives
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip
+          files: ./artifacts/**/*.zip
