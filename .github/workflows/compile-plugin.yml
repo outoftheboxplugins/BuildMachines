@@ -18,13 +18,12 @@ on:
         required: true
 
 jobs:
-  test:
-    name: Test UE ${{ inputs.ue_version }}
+  compile:
+    name: Compile UE ${{ inputs.ue_version }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Free disk space
-        if: ${{ steps.exists.outputs.value == 0 }}
         run: |
           # time df -h
           sudo time swapoff -a
@@ -89,7 +88,7 @@ jobs:
           pip3 install -Iv ue4cli==0.0.54 ;
           ue4 setroot /home/ue4/UnrealEngine '
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: ${{ inputs.plugin_code == '' }}
         with:
           path: plugin

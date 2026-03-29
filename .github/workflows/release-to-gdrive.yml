@@ -1,4 +1,4 @@
-name: Package Plugin
+name: Package Plugin (Google Drive)
 
 on:
   workflow_call:
@@ -15,7 +15,7 @@ jobs:
       matrix:
         version: ['5.5', '5.6', '5.7']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - uses: jossef/action-set-json-field@v2
         with:
@@ -33,7 +33,7 @@ jobs:
         run: |
           zip -r "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip" . -x "LICENSE" -x ".github/*" -x ".git/*"
 
-      - uses: adityak74/google-drive-upload-git-action@main
+      - uses: adityak74/google-drive-upload-git-action@v0.3
         with:
           credentials: ${{ secrets.GDRIVE_TOKEN }}
           filename: "${{ inputs.plugin_name }}-${{ github.ref_name }}-${{ matrix.version }}.zip"
