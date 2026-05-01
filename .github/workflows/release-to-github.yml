@@ -9,6 +9,10 @@ on:
       exclude_patterns:
         default: "-x \"LICENSE\" -x \".github/*\" -x \".git/*\""
         type: string
+      engine_versions:
+        description: 'JSON array of UE versions to build for, e.g. ''["5.4","5.5","5.6","5.7"]'''
+        default: '["5.5","5.6","5.7"]'
+        type: string
 
 jobs:
   build-archives:
@@ -16,7 +20,7 @@ jobs:
     name: 📦 Package Plugin
     strategy:
       matrix:
-        version: ['5.5', '5.6', '5.7']
+        version: ${{ fromJSON(inputs.engine_versions) }}
     steps:
       - uses: actions/checkout@v4
         with:
