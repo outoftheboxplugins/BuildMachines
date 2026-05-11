@@ -1,0 +1,36 @@
+name: 'Install Horde Dashboard Plugins'
+description: 'Install dashboard plugins as local npm modules into the UE Horde tree and register them in plugins/registry.ts'
+
+inputs:
+  ue-root:
+    description: 'Absolute path of the prepared UE tree'
+    required: true
+  source-root:
+    description: 'Directory containing the plugin source folders'
+    required: true
+  plugins:
+    description: 'Newline-separated list of plugin names (folder names under source-root)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Dashboard plugins
+      shell: bash
+      working-directory: ${{ inputs.ue-root }}/Engine/Source/Programs/Horde/HordeDashboard
+      run: |
+        while IFS= read -r name; do
+          [ -z "$name" ] && continue
+
+          echo "Reading package name from $name/package.json"
+          pkg_name=$(node -p "require('${{ inputs.source-root }}/$name/package.json').name")
+
+          echo "Packing $pkg_name into plugins/"
+          tgz=$(npm pack --silent --pack-destination ./plugins "${{ inputs.source-root }}/$name")
+
+          echo "Installing $pkg_name from ./plugins/$tgz"
+          npm install --legacy-peer-deps "./plugins/$tgz"
+
+          echo "Registering $pkg_name in plugins/registry.ts"
+          echo "import \"$pkg_name\";" >> plugins/registry.ts
+        done <<< "${{ inputs.plugins }}"

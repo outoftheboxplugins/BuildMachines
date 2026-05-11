@@ -1,0 +1,63 @@
+name: 'Setup UE Workspace'
+description: 'Sparse-clone the Horde subtree of UnrealEngine and prepare its dotnet toolchain'
+
+inputs:
+  docker-username:
+    description: 'GitHub username with EpicGames/UnrealEngine access'
+    required: true
+  docker-token:
+    description: 'GitHub PAT with EpicGames/UnrealEngine access'
+    required: true
+  ue-version:
+    description: 'UE branch/tag to sparse-clone'
+    required: false
+    default: '5.7'
+
+outputs:
+  ue-root:
+    description: 'Absolute path of the prepared UE tree'
+    value: ${{ runner.temp }}/ue
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@v10
+      with:
+        root-reserve-mb: 2048
+        swap-size-mb: 1024
+        build-mount-path: ${{ github.workspace }}
+        overprovision-lvm: 'true'
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+
+    - name: Clone UE source (sparse)
+      shell: bash
+      run: |
+        git clone --depth 1 --branch ${{ inputs.ue-version }} \
+          --filter=blob:none --sparse \
+          https://${{ inputs.docker-username }}:${{ inputs.docker-token }}@github.com/EpicGames/UnrealEngine.git ${{ runner.temp }}/ue
+
+        git -C ${{ runner.temp }}/ue sparse-checkout set \
+          Engine/Source/Programs/Horde \
+          Engine/Source/Programs/Shared \
+          Engine/Source/Programs/UnrealBuildTool \
+          Engine/Source/Programs/AutomationTool/Properties \
+          Engine/Source/Programs/AutomationTool/AutomationUtils \
+          Engine/Source/Programs/AutomationTool/BuildGraph \
+          Engine/Binaries/DotNET/GitDependencies \
+          Engine/Build
+
+    - name: Run UE Setup.sh
+      shell: bash
+      working-directory: ${{ runner.temp }}/ue
+      run: |
+        ./Setup.sh --force \
+          --exclude=Mac --exclude=IOS --exclude=TVOS \
+          --exclude=Android --exclude=Win64 --exclude=Win32 \
+          --exclude=HoloLens --exclude=VisionOS \
+          --exclude=Documentation --exclude=FeaturePacks \
+          --exclude=Templates --exclude=Samples

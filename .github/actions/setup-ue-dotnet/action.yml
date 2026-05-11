@@ -1,0 +1,25 @@
+name: 'Setup UE Dotnet'
+description: 'Run UE Linux Setup.sh and forward the bundled dotnet to subsequent steps'
+
+inputs:
+  ue-root:
+    description: 'Absolute path of the prepared UE tree'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup UE Linux toolchain
+      shell: bash
+      working-directory: ${{ inputs.ue-root }}
+      run: |
+        chmod +x Engine/Build/BatchFiles/Linux/Setup.sh Engine/Build/BatchFiles/Linux/SetupDotnet.sh Engine/Build/BatchFiles/RunUAT.sh
+        ./Engine/Build/BatchFiles/Linux/Setup.sh
+
+        # Forward SetupDotnet's exports to subsequent steps.
+        source ./Engine/Build/BatchFiles/Linux/SetupDotnet.sh ./Engine/Build/BatchFiles/Linux
+        echo "$UE_DOTNET_DIR" >> "$GITHUB_PATH"
+        echo "UE_DOTNET_DIR=$UE_DOTNET_DIR" >> "$GITHUB_ENV"
+        echo "DOTNET_ROOT=$UE_DOTNET_DIR" >> "$GITHUB_ENV"
+        echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> "$GITHUB_ENV"
+        echo "DOTNET_SYSTEM_GLOBALIZATION_APPLOCALICU=$DOTNET_SYSTEM_GLOBALIZATION_APPLOCALICU" >> "$GITHUB_ENV"

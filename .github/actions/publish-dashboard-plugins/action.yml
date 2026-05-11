@@ -1,0 +1,41 @@
+name: 'Publish Horde Dashboard Plugins'
+description: 'Set version on each dashboard plugin and publish it to npmjs.com'
+
+inputs:
+  source-root:
+    description: 'Directory containing the plugin source folders'
+    required: true
+  version:
+    description: 'Version to stamp on each package'
+    required: true
+  plugins:
+    description: 'Newline-separated list of plugin names (folder names under source-root)'
+    required: true
+  npm-token:
+    description: 'Auth token for publishing to npmjs.com'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Publish Dashboard plugins
+      shell: bash
+      working-directory: ${{ inputs.source-root }}
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
+      run: |
+        while IFS= read -r name; do
+          [ -z "$name" ] && continue
+
+          echo "Setting $name version to ${{ inputs.version }}"
+          npm --prefix "$name" version --no-git-tag-version "${{ inputs.version }}"
+
+          echo "Publishing $name to npmjs.com"
+          npm publish "./$name"
+        done <<< "${{ inputs.plugins }}"

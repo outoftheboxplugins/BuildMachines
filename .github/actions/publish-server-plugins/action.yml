@@ -1,0 +1,39 @@
+name: 'Publish Horde Server Plugins'
+description: 'Pack server plugins and push them to nuget.org'
+
+inputs:
+  pack-dir:
+    description: 'Directory containing the plugin folders to pack (from install-server-plugins output)'
+    required: true
+  version:
+    description: 'Version to stamp on each .nupkg'
+    required: true
+  plugins:
+    description: 'Newline-separated list of plugin names (folder names under pack-dir)'
+    required: true
+  nuget-api-key:
+    description: 'API key for pushing to nuget.org'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Publish Server plugins
+      shell: bash
+      working-directory: ${{ inputs.pack-dir }}
+      run: |
+        while IFS= read -r name; do
+          [ -z "$name" ] && continue
+
+          echo "Packing $name (version ${{ inputs.version }})"
+          dotnet pack "$name/$name.csproj" \
+            -c Release \
+            -p:Version=${{ inputs.version }} \
+            -o "nupkgs/$name"
+
+          echo "Pushing $name to nuget.org"
+          dotnet nuget push "nupkgs/$name"/*.nupkg \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key ${{ inputs.nuget-api-key }} \
+            --skip-duplicate
+        done <<< "${{ inputs.plugins }}"

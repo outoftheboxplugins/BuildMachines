@@ -1,0 +1,35 @@
+name: 'Install Horde Server Plugins'
+description: 'Copy server plugins into the UE Horde tree and register them in HordeServer.csproj'
+
+inputs:
+  ue-root:
+    description: 'Absolute path of the prepared UE tree'
+    required: true
+  source-root:
+    description: 'Directory containing the plugin source folders'
+    required: true
+  plugins:
+    description: 'Newline-separated list of plugin names (folder names under source-root)'
+    required: true
+
+outputs:
+  horde-plugins-dir:
+    description: 'Directory inside the UE Horde tree where the plugins were installed'
+    value: ${{ inputs.ue-root }}/Engine/Source/Programs/Horde/Plugins/GitHub
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Server plugins
+      shell: bash
+      working-directory: ${{ inputs.ue-root }}/Engine/Source/Programs/Horde
+      run: |
+        while IFS= read -r name; do
+          [ -z "$name" ] && continue
+
+          echo "Copying $name into Plugins/GitHub/"
+          rsync -a --mkpath "${{ inputs.source-root }}/$name/" "Plugins/GitHub/$name/"
+
+          echo "Registering $name in HordeServer.csproj"
+          dotnet add HordeServer/HordeServer.csproj reference "Plugins/GitHub/$name/$name.csproj"
+        done <<< "${{ inputs.plugins }}"

@@ -29,6 +29,7 @@ jobs:
           root-reserve-mb: 2048
           swap-size-mb: 1024
           build-mount-path: /var/lib/docker
+          overprovision-lvm: 'true'
           remove-dotnet: 'true'
           remove-android: 'true'
           remove-haskell: 'true'
