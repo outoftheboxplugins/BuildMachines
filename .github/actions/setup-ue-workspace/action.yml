@@ -55,9 +55,9 @@ runs:
       shell: bash
       working-directory: ${{ runner.temp }}/ue
       run: |
-        ./Setup.sh --force \
+        script -qefc './Setup.sh --force \
           --exclude=Mac --exclude=IOS --exclude=TVOS \
           --exclude=Android --exclude=Win64 --exclude=Win32 \
           --exclude=HoloLens --exclude=VisionOS \
           --exclude=Documentation --exclude=FeaturePacks \
-          --exclude=Templates --exclude=Samples
+          --exclude=Templates --exclude=Samples' /dev/null
