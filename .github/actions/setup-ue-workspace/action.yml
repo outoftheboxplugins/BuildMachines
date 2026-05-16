@@ -60,4 +60,7 @@ runs:
           --exclude=Android --exclude=Win64 --exclude=Win32 \
           --exclude=HoloLens --exclude=VisionOS \
           --exclude=Documentation --exclude=FeaturePacks \
-          --exclude=Templates --exclude=Samples' /dev/null
+          --exclude=Templates --exclude=Samples' /dev/null \
+          | stdbuf -o0 tr '\r' '\n' \
+          | sed -uE 's/(Updating dependencies:[[:space:]]+[0-9]+%).*/\1/' \
+          | stdbuf -oL uniq
