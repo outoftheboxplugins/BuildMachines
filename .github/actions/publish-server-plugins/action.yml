@@ -25,14 +25,17 @@ runs:
         while IFS= read -r name; do
           [ -z "$name" ] && continue
 
-          echo "Packing $name (version ${{ inputs.version }})"
-          dotnet pack "$name/$name.csproj" \
+          echo "Getting csproj name from $name"
+          csproj_name=$(basename "$name")
+
+          echo "Packing $csproj_name (version ${{ inputs.version }})"
+          dotnet pack "$csproj_name/$csproj_name.csproj" \
             -c Release \
             -p:Version=${{ inputs.version }} \
-            -o "nupkgs/$name"
+            -o "nupkgs/$csproj_name"
 
-          echo "Pushing $name to nuget.org"
-          dotnet nuget push "nupkgs/$name"/*.nupkg \
+          echo "Pushing $csproj_name to nuget.org"
+          dotnet nuget push "nupkgs/$csproj_name"/*.nupkg \
             --source https://api.nuget.org/v3/index.json \
             --api-key ${{ inputs.nuget-api-key }} \
             --skip-duplicate
