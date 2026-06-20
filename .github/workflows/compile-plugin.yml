@@ -63,8 +63,10 @@ jobs:
           # Chown some paths to the GH user to make UE5 work properly. We can't just chown the whole UnrealEngine or
           # docker would implicitly have to copy it to the container and we would run out of space on the GH runner.
           docker exec --user root unreal bash -c "
+            chown -R $uid /tmp/uba_shm_locks ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Plugins/VirtualProduction/CaptureData ;
+            chown -R $uid /home/ue4/UnrealEngine/Engine/Plugins/MetaHuman ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/DotNet ;
             chown -R $uid /home/ue4/.config "
             
