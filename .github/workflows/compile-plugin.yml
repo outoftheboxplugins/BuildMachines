@@ -66,6 +66,7 @@ jobs:
             chown -R $uid /tmp/uba_shm_locks ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Plugins/VirtualProduction/CaptureData ;
+            chown -R $uid /home/ue4/UnrealEngine/Engine/Plugins/VirtualProduction/CaptureManager ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Plugins/MetaHuman ;
             chown -R $uid /home/ue4/UnrealEngine/Engine/Binaries/ThirdParty/DotNet ;
             chown -R $uid /home/ue4/.config "
