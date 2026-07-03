@@ -11,7 +11,7 @@ inputs:
   ue-version:
     description: 'UE branch/tag to sparse-clone'
     required: false
-    default: '5.7'
+    default: '5.8'
 
 outputs:
   ue-root:
