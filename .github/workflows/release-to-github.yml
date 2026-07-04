@@ -11,7 +11,7 @@ on:
         type: string
       engine_versions:
         description: 'JSON array of UE versions to build for'
-        default: '['5.6', '5.7', '5.8']'
+        default: "['5.6', '5.7', '5.8']"
         type: string
 
 jobs:
