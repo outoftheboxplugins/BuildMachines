@@ -45,6 +45,9 @@ runs:
           Engine/Source/Programs/Horde \
           Engine/Source/Programs/Shared \
           Engine/Source/Programs/UnrealBuildTool \
+          Engine/Source/Programs/UnrealBuildTool.Tests \
+          Engine/Source/Programs/UnrealBuildTool.GenerateDocumentation \
+          Engine/Source/Programs/AutomationTool.Tests \
           Engine/Source/Programs/AutomationTool/AutomationTool \
           Engine/Source/Programs/AutomationTool/Properties \
           Engine/Source/Programs/AutomationTool/AutomationUtils \
