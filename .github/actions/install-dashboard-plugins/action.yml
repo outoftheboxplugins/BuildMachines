@@ -28,8 +28,8 @@ runs:
           echo "Packing $pkg_name into plugins/"
           tgz=$(npm pack --silent --pack-destination ./plugins "${{ inputs.source-root }}/$name")
 
-          echo "Installing $pkg_name from ./plugins/$tgz"
-          npm install --legacy-peer-deps "./plugins/$tgz"
+          echo "Adding $pkg_name to package.json as file:plugins/$tgz"
+          npm pkg set "dependencies.$pkg_name=file:plugins/$tgz"
 
           echo "Registering $pkg_name in plugins/registry.ts"
           echo "import \"$pkg_name\";" >> plugins/registry.ts
