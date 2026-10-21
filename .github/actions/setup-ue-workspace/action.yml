@@ -21,19 +21,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Maximize build space
-      uses: easimon/maximize-build-space@v10
-      with:
-        root-reserve-mb: 2048
-        swap-size-mb: 1024
-        build-mount-path: ${{ github.workspace }}
-        overprovision-lvm: 'true'
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-        remove-codeql: 'true'
-        remove-docker-images: 'true'
-
     - name: Clone UE source (sparse)
       shell: bash
       run: |
@@ -55,16 +42,30 @@ runs:
           Engine/Binaries/DotNET/GitDependencies \
           Engine/Build
 
+    - name: Restrict UE dependencies to Horde
+      shell: bash
+      working-directory: ${{ runner.temp }}/ue
+      run: |
+        cat > .gitdepsignore <<'EOF'
+        # Read by Epic's GitDependencies (Setup.sh). Skip everything, then re-include what the Horde build reads.
+        /**
+        !/*
+        !/Engine/Source/Programs/Shared/**
+        !/Engine/Source/Programs/Horde/**
+        !/Engine/Source/Programs/AutomationTool/**
+        !/Engine/Source/Programs/UnrealBuildTool/**
+        !/Engine/Binaries/DotNET/EpicGames.Perforce.Native/**
+        !/Engine/Binaries/ThirdParty/fastJSON/**
+        !/Engine/Binaries/ThirdParty/DotNet/*/linux-x64/**
+        !/Engine/Binaries/ThirdParty/ICU/**/Unix/**
+        !/Engine/Binaries/ThirdParty/OpenSSL/Unix/**
+        EOF
+
     - name: Run UE Setup.sh
       shell: bash
       working-directory: ${{ runner.temp }}/ue
       run: |
-        script -qefc './Setup.sh --force \
-          --exclude=Mac --exclude=IOS --exclude=TVOS \
-          --exclude=Android --exclude=Win64 --exclude=Win32 \
-          --exclude=HoloLens --exclude=VisionOS \
-          --exclude=Documentation --exclude=FeaturePacks \
-          --exclude=Templates --exclude=Samples' /dev/null \
+        script -qefc './Setup.sh --force' /dev/null \
           | stdbuf -o0 tr '\r' '\n' \
           | sed -uE 's/(Updating dependencies:[[:space:]]+[0-9]+%).*/\1/' \
           | stdbuf -oL uniq
