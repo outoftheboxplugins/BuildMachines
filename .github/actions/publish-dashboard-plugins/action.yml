@@ -11,9 +11,6 @@ inputs:
   plugins:
     description: 'Newline-separated list of plugin names (folder names under source-root)'
     required: true
-  npm-token:
-    description: 'Auth token for publishing to npmjs.com'
-    required: true
 
 runs:
   using: 'composite'
@@ -21,14 +18,12 @@ runs:
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '24'
         registry-url: 'https://registry.npmjs.org'
 
     - name: Publish Dashboard plugins
       shell: bash
       working-directory: ${{ inputs.source-root }}
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
       run: |
         while IFS= read -r name; do
           [ -z "$name" ] && continue
